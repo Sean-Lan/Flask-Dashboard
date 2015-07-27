@@ -74,7 +74,6 @@ class Model:
         SQL = SQL.format(table_name = self.table_name,
                 columns_section = ', '.join(columns_list),
                 condition_section = condition_section)
-        print SQL
         cursor = self.conn.cursor()
         cursor.execute(SQL, condition_dict)
         results = []
