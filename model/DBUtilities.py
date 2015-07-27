@@ -30,17 +30,20 @@ class Model:
         self.conn.execute(SQL, column_dict)
         self.conn.commit()
 
-    def update(self, column_dict, condition_dict):
+    def update(self, column_dict, condition_dict={}):
         SQL = """UPDATE {table_name} 
                  {set_section}
                  WHERE {condition_section}
               """
         set_section = reduce(lambda sql, item: sql + item + '= :' + item + ',',
                 column_dict.keys(), 'SET ').rstrip(',')
-        condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
-                condition_dict.keys(), '')
-        if condition_section.endswith(' AND '):
-            condition_section = condition_section[:-5]
+        if condition_dict:
+            condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
+                    condition_dict.keys(), '')
+            if condition_section.endswith(' AND '):
+                condition_section = condition_section[:-5]
+        else:
+            condition_section = 1
         SQL = SQL.format(table_name = self.table_name,
                    set_section = set_section,
                    condition_section = condition_section)
@@ -49,28 +52,34 @@ class Model:
         self.conn.execute(SQL, sql_dict)
         self.conn.commit()
 
-    def delete(self, condition_dict):
+    def delete(self, condition_dict={}):
         SQL = """DELETE FROM {table_name}
                  WHERE {condition_section}
               """
-        condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
-                condition_dict.keys(), '')
-        if condition_section.endswith(' AND '):
-            condition_section = condition_section[:-5]
+        if condition_dict:
+            condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
+                    condition_dict.keys(), '')
+            if condition_section.endswith(' AND '):
+                condition_section = condition_section[:-5]
+        else:
+            condition_section = 1
         SQL = SQL.format(table_name = self.table_name,
                 condition_section = condition_section)
         self.conn.execute(SQL, columns_list, condition_dict)
         self.conn.commit()
 
-    def select(self, columns_list, condition_dict):
+    def select(self, columns_list, condition_dict = {}):
         SQL = """SELECT {columns_section}
                  FROM {table_name}
                  WHERE {condition_section}
               """
-        condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
-                condition_dict.keys(), '')
-        if condition_section.endswith(' AND '):
-            condition_section = condition_section[:-5]
+        if condition_dict:
+            condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
+                    condition_dict.keys(), '')
+            if condition_section.endswith(' AND '):
+                condition_section = condition_section[:-5]
+        else:
+            condition_section = 1
         SQL = SQL.format(table_name = self.table_name,
                 columns_section = ', '.join(columns_list),
                 condition_section = condition_section)
@@ -83,8 +92,6 @@ class Model:
             results.append(result)
         return results
         
-
-
 
 if __name__ == '__main__':
     model = Model('myrio_roborio_2016_stack_dashboard')
@@ -107,5 +114,6 @@ if __name__ == '__main__':
             }
     # model.update(column_dict2, condition_dict)
     # model.delete(condition_dict)
-    print model.select(column_dict.keys(), condition_dict)
+    # print model.select(column_dict.keys(), condition_dict)
+    print model.select(column_dict.keys())
 
