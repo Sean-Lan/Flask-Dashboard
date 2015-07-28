@@ -40,17 +40,17 @@ def update_stack_dashboard(table_name, stack_web_url, date):
 def update_toolkit_installer(table_name, toolkit_folder, name, products, date):
     logger = logging.getLogger(__name__)
     model = Model(table_name)
-    column_list = ['myrio_daily_build_folder_path',]
-    exist_installers = [stack['myrio_daily_build_folder_path'] for stack in model.select(column_list)]
+    column_list = ['installer_path',]
+    exist_installers = [stack['installer_path'] for stack in model.select(column_list)]
     installer_folders = installer.retrieve_installer_folders(toolkit_folder, name, date)
     for installer_folder in installer_folders:
         if installer_folder in exist_installers:
             continue
-        logger.info('Handle install: %s', installer_folder)
+        logger.info('Handle toolkit installer: %s', installer_folder)
         try:
             record = installer.get_installer_record(installer_folder, products)
             table_record = {
-                    'myrio_daily_build_folder_path': record['installer_path'],
+                    'installer_path': record['installer_path'],
                     'lv_version': record['lvVersion'],
                     'lv_api_version': record['lvAPIVersion'],
                     'safemode': record['safemode']
@@ -66,10 +66,16 @@ if __name__ == '__main__':
 
     # update_stack_dashboard('myrio_roborio_2016_stack_dashboard', main_config.STACK_WEB_URL, main_config.NEWER_THAN_DATE)
 
-    update_toolkit_installer('myrio_2016_toolkit_installer_dashboard', 
-            main_config.MYRIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
-            'myRIO', 
-            ['myRIO-1900','myRIO-1950'], 
+    # update_toolkit_installer('myrio_2016_toolkit_installer_dashboard', 
+    #         main_config.MYRIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
+    #         'myRIO', 
+    #         ['myRIO-1900','myRIO-1950'], 
+    #         main_config.NEWER_THAN_DATE)
+
+    update_toolkit_installer('roborio_2016_toolkit_installer_dashboard', 
+            main_config.ROBORIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
+            'roboRIO', 
+            ['roboRIO'], 
             main_config.NEWER_THAN_DATE)
     
 

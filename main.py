@@ -22,14 +22,14 @@ def myrio_roborio_2016_stack_dashboard():
     return render_template('myrio_roborio_2016_stack_dashboard.html', records=records)
 
 
-@app.route('/myrio_2016_toolkit_installer_dashboard')
-def myrio_2016_toolkit_installer_dashboard():
-    model = Model('myrio_2016_toolkit_installer_dashboard')
-    column_list = ['myrio_daily_build_folder_path', 'lv_version', 'lv_api_version', 
+@app.route('/toolkit_installer_dashboard/<name>/<year>')
+def toolkit_installer_dashboard(name, year):
+    model = Model(name+'_'+year+'_toolkit_installer_dashboard')
+    column_list = ['installer_path', 'lv_version', 'lv_api_version', 
             'safemode', 'comment']
     records = model.select(column_list)
-    records = sorted(records, key=lambda record: record['myrio_daily_build_folder_path'], reverse=True)
-    return render_template('myrio_2016_toolkit_installer_dashboard.html', records=records)
+    records = sorted(records, key=lambda record: record['installer_path'], reverse=True)
+    return render_template('toolkit_installer_dashboard.html', records=records, name=name, year=year)
 
 
 if __name__ == '__main__':
