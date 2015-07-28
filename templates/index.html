@@ -9,12 +9,15 @@ $(document).ready(
         console.log('ready')
         $("#main-frame").load(
             function(){
-                console.log('ok!')
                 $(this).width($(this).parent().width())
-                $(this).height($(this).contents().find("html").height() - $("nav").height());
+                $(this).height($(this).contents().find("html").height())
             } 
         )
 });
+
+window.onresize=function(){  
+    $("#main-frame").width($("#main-frame").parent().width()) 
+}
 </script>
 {% endblock %}
 {% block content %}

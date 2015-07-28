@@ -19,110 +19,24 @@
                 </tr>
             </thead>
             <tbody>
+                {% for record in records %}
                 <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
+                    <td><a href="{{ record['validated_stack_url'] }}">{{ record['validated_stack'] }}</a></td>
+                    <td>{{ record['lv_version'] }}</td>
+                    <td>{{ record['lv_api_version'] }}</td>
+                    <td>{{ record['safemode'] }}</td>
+                    {% if record['sanity_test_result'] %}
+                    <td><a href="{{ record['sanity_test_result_url'] }}">{{ record['sanity_test_result'] }}</a></td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% if record['comment'] %}
+                    <td>{{ record['comment'] }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
                 </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
-                <tr>
-                    <td><a class="jive-link-external-small" href="http://niweb.natinst.com/confluence/display/RIOSW/RIO+Build+20150624_1715f3+with+06-18+LV+Stack" rel="nofollow">RIO Build 20150624_1715f3 with 06-18 LV Stack</a></td>
-                    <td>15.0</td>
-                    <td>15.0.0r0</td>
-                    <td>3.0.0f0/3.0.0f0</td>
-                    <td>Pass</td>
-                    <td>I'm the comments.</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
