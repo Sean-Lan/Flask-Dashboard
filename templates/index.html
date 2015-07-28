@@ -6,7 +6,6 @@
 <script>
 $(document).ready(
     function(){        
-        console.log('ready')
         $("#main-frame").load(
             function(){
                 $(this).width($(this).parent().width())
@@ -16,7 +15,9 @@ $(document).ready(
 });
 
 window.onresize=function(){  
-    $("#main-frame").width($("#main-frame").parent().width()) 
+    var iframe = $("#main-frame")
+    iframe.height((iframe.contents().find("html").height()))
+    iframe.width($("#main-frame").parent().width()) 
 }
 </script>
 {% endblock %}
