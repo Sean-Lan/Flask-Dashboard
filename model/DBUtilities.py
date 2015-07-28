@@ -1,5 +1,5 @@
 import sqlite3
-from DBConfig import *
+DB_NAME = 'dashboard.db'
 
 def connect_db(db_name=DB_NAME):
     conn = sqlite3.connect(db_name)
@@ -91,29 +91,3 @@ class Model:
             result.update(row)
             results.append(result)
         return results
-        
-
-if __name__ == '__main__':
-    model = Model('myrio_roborio_2016_stack_dashboard')
-    column_dict = {
-            'validated_stack': 'Test Stack',
-            'validated_stack_url': 'validated_stack_url TEST',
-            'lv_version': 'lv_version TEST',
-            'lv_api_version':'lv_api_version TEST',
-            'safemode': 'safemode TEST',
-            }
-    # model.insert(column_dict)
-    column_dict2 = {
-            'lv_version': 'lv_version TEST2',
-            'lv_api_version':'lv_api_version TEST2',
-            'safemode': 'safemode TEST',
-            }
-    condition_dict = {
-            'validated_stack': 'Test Stack',
-            'validated_stack_url': 'validated_stack_url TEST',
-            }
-    # model.update(column_dict2, condition_dict)
-    # model.delete(condition_dict)
-    # print model.select(column_dict.keys(), condition_dict)
-    print model.select(column_dict.keys())
-
