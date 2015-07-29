@@ -48,3 +48,21 @@ def get_versions_from_msi(msiPath,productNames):
     return versionDict
 
 
+def remove_path_prefix(path):
+    """
+    Remove '\\cn-sha-argo\' or '\\us-aus-argo\'
+    from path
+    """
+    return path[14:]
+
+
+def add_path_prefix(path, prefix):
+    """
+    Add '\\cn-sha-argo' or '\\us-aus-argo'
+    to the begin of the path
+    """
+    return os.path.join(prefix, path)
+
+if __name__ == '__main__':
+    path = r'\\us-aus-argo\NISoftwarePrerelease\myRIO\Bundle\3.1\Daily\2015_06_23_0247'
+    print remove_path_prefix(path)
