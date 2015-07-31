@@ -42,17 +42,29 @@ def getdirsize(dir):
     return size 
 
 
-def redupesize(dir):
+def redupesize(dir, depduped_dict = {}, used_dict = {}):
     """
     Dedupe:
     With regard to files with the same name,
     only the last visit file's size counts.
+    If `depuded_dict` is passed in, all depuded file, 
+    and its size is stored in the dict.
+    If `used_dict` is passed in, all final used file, 
+    and its size is stored in the dict.
     """
     file_dict = {}
+    fullpath_dict = {}
     for root, dirs, files in os.walk(dir):
         for name in files:
-            file_dict[name] = os.path.getsize(os.path.join(root, name))
-
+            full_path = os.path.join(root, name)
+            file_size = os.path.getsize(full_path)
+            if name in file_dict: # duplicate file found
+                deduped_path = fullpath_dict[name]
+                deduped_dict[deduped_path] = file_dict[name]
+            fullpath_dict[name] = full_path
+            file_dict[name] = file_size
+    for name in file_dict:
+        used_dict[fullpath_dict[name]] = file_dict[name]
     return reduce(lambda size, name: size + file_dict[name],
             file_dict,
             0)
@@ -84,20 +96,23 @@ if __name__ == '__main__':
     # newer_than_date = 20150301
     # bundle_folders = retrieve_bundle_folders(bundle_root, newer_than_date)
     # print bundle_folders
-    bundle_path = r'\\cn-sha-argo\NISoftwarePrerelease\roboRIO\Bundle\3.1\Daily\2015_06_15_1523'
-    product_names = ['roboRIO']
-    DVD_names = ['roboRIO_DVD1', 'roboRIO_DVD2']
-    record = get_bundle_record(bundle_path, product_names, DVD_names)
-
     # bundle_path = r'\\cn-sha-argo\NISoftwarePrerelease\roboRIO\Bundle\3.1\Daily\2015_06_15_1523'
-    # product_names = ['myRIO-1900', 'myRIO-1950']
-    # DVD_names = ['myRIO_DVD1', 'myRIO_DVD2']
+    # product_names = ['roboRIO']
+    # DVD_names = ['roboRIO_DVD1', 'roboRIO_DVD2']
     # record = get_bundle_record(bundle_path, product_names, DVD_names)
-    print record
-
-
-
-
-
-
-
+    # bundle_path = r'\\cn-sha-argo\NISoftwarePrerelease\roboRIO\Bundle\3.1\Daily\2015_06_15_1523'
+    bundle_path = r'\\cn-sha-argo\NISoftwareReleased\Windows\Suites\LabVIEW Add-ons\myRIO\2015\3.1.0\myRIO_DVD1'
+    deduped_dict = {}
+    used_dict = {}
+    deduped_size = redupesize(bundle_path, deduped_dict, used_dict)
+    print deduped_size
+    f = open('dedupe.log', 'w')
+    f.write('%s files remained, %s files deduped\n\n' % (len(used_dict), len(deduped_dict)))
+    f.write('-'*80)
+    f.write('\n\n')
+    f.write('Remained files(full path, size):\n')
+    for name in sorted(used_dict):
+        f.write(name + ': ' + str(used_dict[name]) + '\n')
+    f.write('\n\nDeduped files(full path, size):\n')
+    for name in sorted(deduped_dict):
+        f.write(name + ': ' + str(deduped_dict[name]) + '\n')

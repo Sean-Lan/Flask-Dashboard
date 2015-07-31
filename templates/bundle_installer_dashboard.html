@@ -23,10 +23,10 @@
             <tbody>
                 {% for record in records %}
                 <tr>
-                    <td>{{ record['bundle_path'] }}</td>
+                    <td>{{ record['bundle_date'] }}<span class='copy-content'>{{ record['bundle_path'] }}</span><span class="glyphicon glyphicon-copy copy-span" aria-hidden="true"></span></td>
                     <td>{{ record['lv_version'] }}</td>
                     <td>{{ record['lv_api_version'] }}</td>
-                    <td>{{ record['toolkit_path'] }}</td>
+                    <td>{{ record['toolkit_date'] }}<span class='copy-content'>{{ record['toolkit_path'] }}</span><span class="glyphicon glyphicon-copy copy-span" aria-hidden="true"></span></td>
                     <td>{{ record['safemode'] }}</td>
                     <td>{{ record['actual_size'] }}</td>
                     <td>{{ record['dedupe_size'] }}</td>

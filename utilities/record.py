@@ -5,6 +5,7 @@ infomation (e.g., lvVersion, lvAPIversion, safemode) of the toolkit or bundle.
 import msilib
 import ConfigParser
 import os
+import re
 
 
 def get_lv_info(config_file_path):
@@ -62,6 +63,14 @@ def add_path_prefix(path, prefix):
     to the begin of the path
     """
     return os.path.join(prefix, path)
+
+
+def get_date(folder_name):
+    date_pattern = re.compile(r'\d{4}_?\d{2}_?\d{2}_\d{4}')
+    match = date_pattern.search(folder_name)
+    return match.group()
+
+
 
 if __name__ == '__main__':
     path = r'\\us-aus-argo\NISoftwarePrerelease\myRIO\Bundle\3.1\Daily\2015_06_23_0247'

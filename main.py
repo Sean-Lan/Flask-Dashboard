@@ -4,7 +4,7 @@ import main_config
 from flask import Flask, request, session, g, redirect, url_for, \
         abort, render_template, flash
 from contextlib import closing
-from utilities.record import add_path_prefix
+from utilities.record import add_path_prefix, get_date
 from model.DBUtilities import Model
 
 # create application
@@ -33,8 +33,9 @@ def toolkit_installer_dashboard(name, year):
     records = model.select(column_list)
     records = sorted(records, key=lambda record: record['installer_path'], reverse=True)
     for record in records:
+        record['installer_date'] = get_date(record['installer_path'])
         record['installer_path'] = add_path_prefix(record['installer_path'],
-                main_config.PATH_PREFIX)
+                main_config.PATH_PREFIX).rstrip('\\')
     return render_template('toolkit_installer_dashboard.html', records=records, name=name, year=year)
 
 
@@ -46,13 +47,18 @@ def bundle_installer_dashboard(name, year):
     records = model.select(column_list)
     records = sorted(records, key=lambda record: record['bundle_path'], reverse=True)
     for record in records:
+        record['bundle_date'] = get_date(record['bundle_path'])
         record['bundle_path'] = add_path_prefix(record['bundle_path'],
-                main_config.PATH_PREFIX)
+                main_config.PATH_PREFIX).rstrip('\\')
+        record['toolkit_date'] = get_date(record['toolkit_path'])
         record['toolkit_path'] = add_path_prefix(record['toolkit_path'],
-                main_config.PATH_PREFIX)
+                main_config.PATH_PREFIX).rstrip('\\')
     return render_template('bundle_installer_dashboard.html', records=records, name=name, year=year)
 
 
+@app.route('/test')
+def test():
+    return render_template('test.html')
 
 
 if __name__ == '__main__':
