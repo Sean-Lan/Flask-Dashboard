@@ -4,7 +4,7 @@ import main_config
 from flask import Flask, request, session, g, redirect, url_for, \
         abort, render_template, flash
 from contextlib import closing
-from utilities.record import add_path_prefix
+from utilities import add_path_prefix
 from model.DBUtilities import Model
 
 # create application
