@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "dashboard_common.html" %}
 {% block title %}myRIO/roboRIO 2016 Stack Dashboard{% endblock %}
 {% block head %}
 {{ super() }}
@@ -30,15 +30,16 @@
                     <td>{{ record['safemode'] }}</td>
                     <td>{{ record['actual_size'] }}</td>
                     <td>{{ record['dedupe_size'] }}</td>
-                    {% if record['comment'] %}
-                    <td>{{ record['comment'] }}</td>
-                    {% else %}
-                    <td></td>
-                    {% endif %}
+                    <td class="comments">
+                        {% if record['comment'] %}
+                        {{ record['comment'] }}
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
 {% endblock %}
