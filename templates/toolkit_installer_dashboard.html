@@ -4,6 +4,7 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
+{{ super() }}
 <div id="main" style="margin: 0; padding: 0;">
     <h1>{{ name }} {{ year }} Toolkit Installer Dashboard</h1>
     <div class="table-responsive">
@@ -24,11 +25,11 @@
                     <td>{{ record['lv_version'] }}</td>
                     <td>{{ record['lv_api_version'] }}</td>
                     <td>{{ record['safemode'] }}</td>
+                    <td class="comments">
                     {% if record['comment'] %}
-                    <td>{{ record['comment'] }}</td>
-                    {% else %}
-                    <td></td>
+                    {{ record['comment'] }}
                     {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
