@@ -31,7 +31,7 @@
                     <a href="{{ record['sanity_test_result_url'] }}">{{ record['sanity_test_result'] }}</a>
                     {% endif %}
                     </td>
-                    <td class="comments">
+                    <td class="comments" onselectstart="return false">
                     {% if record['comment'] %}
                         {{ record['comment'] | safe }}
                     {% endif %}

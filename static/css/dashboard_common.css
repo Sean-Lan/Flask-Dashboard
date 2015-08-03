@@ -12,3 +12,7 @@
     width: 100%; 
     height: 200px;
 }
+
+.comments {
+    -moz-user-select: none; 
+}

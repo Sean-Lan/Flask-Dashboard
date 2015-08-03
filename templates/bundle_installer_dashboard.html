@@ -31,7 +31,7 @@
                     <td>{{ record['safemode'] }}</td>
                     <td>{{ record['actual_size'] }}</td>
                     <td>{{ record['dedupe_size'] }}</td>
-                    <td class="comments">
+                    <td class="comments" onselectstart="return false">
                         {% if record['comment'] %}
                         {{ record['comment'] | safe }}
                         {% endif %}

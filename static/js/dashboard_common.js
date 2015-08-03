@@ -51,12 +51,15 @@ $(document).ready(function() {
 
     $('#comments-modal').on('hidden.bs.modal', function () {
         KindEditor.remove('textarea[name="comments"]');
+        $('.CurrentComment').parent().removeClass('success')
+        $('.CurrentComment').removeClass('CurrentComment')
     })
 
     $(".comments").dblclick(function(){
         var primary_key = $(this).parent().find('td span.primary-key').text();
         var comments = $(this).parent().find('td').last().text();
         $(this).addClass('CurrentComment')
+        $(this).parent().addClass('success')
         $('#comments-modal').attr('data-primary_key', primary_key);
         $('#comments-modal').modal('show');
     });
@@ -89,7 +92,6 @@ $(document).ready(function() {
                 if (data.status == 'success') {
                     // console.log("Data: " + data + "\nStatus: " + status);
                     $('.CurrentComment').html(comments)
-                    $('.CurrentComment').removeClass('CurrentComment')
                     $('#comments-modal').modal('hide');
                 }
             });
