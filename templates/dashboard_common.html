@@ -2,49 +2,11 @@
 {% block head %}
 {{ super() }}
 <link href="{{ url_for('static', filename='kindeditor/themes/default/default.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/dashboard_common.css') }}" rel="stylesheet">
 <script src="{{ url_for('static', filename='kindeditor/kindeditor-all-min.js') }}"></script>
 <script src="{{ url_for('static', filename='kindeditor/lang/en.js') }}"></script>
-<style>
-#comments-modal .modal-body {
-    width: 100%; 
-    height: 200px;
-}
-</style>
-<script>
-$(document).ready(function(){
-    $('#comments-modal').on('shown.bs.modal', function () {
-        $(document).off('focusin.modal');
-        KindEditor.create('textarea[name="comments"]', {
-            resizeType : 1,
-            allowPreviewEmoticons : false,
-            allowImageUpload : false,
-            items : [
-                'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
-                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
-                'insertunorderedlist', '|', 'link'],
-            width: '100%',
-            autoHeightMode : true,
-            afterCreate : function() {
-                this.loadPlugin('autoheight');
-            }
-        });
-        KindEditor.html('textarea[name="comments"]', $(this).attr('data-comments'));
-    })
-
-    $('#comments-modal').on('hidden.bs.modal', function () {
-        KindEditor.remove('textarea[name="comments"]');
-    })
-
-    $(".comments").dblclick(function(){
-        var primary_key = $(this).parent().find('td').first().text();
-        var comments = $(this).parent().find('td').last().text();
-        $('#comments-modal').attr('data-comments', comments);
-        $('#comments-modal').attr('data-primary_key', primary_key);
-        $('#comments-modal').modal('show');
-    });
-
-});
-</script>
+<script src="{{ url_for('static', filename='js/ZeroClipboard.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard_common.js') }}"></script>
 {% endblock %}
 
 {% block content %}
