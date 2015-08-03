@@ -30,7 +30,7 @@ class Model:
         self.conn.execute(SQL, column_dict)
         self.conn.commit()
 
-    def update(self, column_dict, condition_dict={}):
+    def update(self, column_dict, condition_dict={}, like=False):
         SQL = """UPDATE {table_name} 
                  {set_section}
                  WHERE {condition_section}
@@ -38,8 +38,12 @@ class Model:
         set_section = reduce(lambda sql, item: sql + item + '= :' + item + ',',
                 column_dict.keys(), 'SET ').rstrip(',')
         if condition_dict:
-            condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
-                    condition_dict.keys(), '')
+            if like:
+                condition_section = reduce(lambda sql, item: sql + item + ' LIKE :' + item + ' AND ',
+                        condition_dict.keys(), '')
+            else:
+                condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
+                        condition_dict.keys(), '')
             if condition_section.endswith(' AND '):
                 condition_section = condition_section[:-5]
         else:
@@ -48,34 +52,48 @@ class Model:
                    set_section = set_section,
                    condition_section = condition_section)
         sql_dict = dict(column_dict)
+        if like:
+            for key in condition_dict:
+                condition_dict[key] = '%' + condition_dict[key] + '%'
         sql_dict.update(condition_dict) 
         self.conn.execute(SQL, sql_dict)
         self.conn.commit()
 
-    def delete(self, condition_dict={}):
+    def delete(self, condition_dict={}, like=False):
         SQL = """DELETE FROM {table_name}
                  WHERE {condition_section}
               """
         if condition_dict:
-            condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
-                    condition_dict.keys(), '')
+            if like:
+                condition_section = reduce(lambda sql, item: sql + item + ' LIKE :' + item + ' AND ',
+                        condition_dict.keys(), '')
+            else:
+                condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
+                        condition_dict.keys(), '')
             if condition_section.endswith(' AND '):
                 condition_section = condition_section[:-5]
         else:
             condition_section = 1
         SQL = SQL.format(table_name = self.table_name,
                 condition_section = condition_section)
+        if like:
+            for key in condition_dict:
+                condition_dict[key] = '%' + condition_dict[key] + '%'
         self.conn.execute(SQL, columns_list, condition_dict)
         self.conn.commit()
 
-    def select(self, columns_list, condition_dict = {}):
+    def select(self, columns_list, condition_dict = {}, like=False):
         SQL = """SELECT {columns_section}
                  FROM {table_name}
                  WHERE {condition_section}
               """
         if condition_dict:
-            condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
-                    condition_dict.keys(), '')
+            if like:
+                condition_section = reduce(lambda sql, item: sql + item + ' LIKE :' + item + ' AND ',
+                        condition_dict.keys(), '')
+            else:
+                condition_section = reduce(lambda sql, item: sql + item + '= :' + item + ' AND ',
+                        condition_dict.keys(), '')
             if condition_section.endswith(' AND '):
                 condition_section = condition_section[:-5]
         else:
@@ -83,6 +101,9 @@ class Model:
         SQL = SQL.format(table_name = self.table_name,
                 columns_section = ', '.join(columns_list),
                 condition_section = condition_section)
+        if like:
+            for key in condition_dict:
+                condition_dict[key] = '%' + condition_dict[key] + '%'
         cursor = self.conn.cursor()
         cursor.execute(SQL, condition_dict)
         results = []

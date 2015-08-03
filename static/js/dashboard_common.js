@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var client = new ZeroClipboard($('.copy-span'), { 
-                    moviePath: '/static/js/ZeroClipboard.swf' 
-            });
+        moviePath: '/static/js/ZeroClipboard.swf' 
+    });
     // bind the zeroclipboard event
     client.on( "ready", function( readyEvent ) {
         client.on( "beforecopy", function( event ) {
@@ -25,28 +25,28 @@ $(document).ready(function() {
     $('.copy-span').mouseenter(function(){
         var that = $(this)
         that.tooltip('show');
-        setTimeout(function(){
-            that.tooltip('hide');
-        }, 2000);
+    setTimeout(function(){
+        that.tooltip('hide');
+    }, 2000);
     });
-    
+
     $('#comments-modal').on('shown.bs.modal', function () {
         $(document).off('focusin.modal');
-        KindEditor.create('textarea[name="comments"]', {
+        editor = KindEditor.create('textarea[name="comments"]', {
             resizeType : 1,
             allowPreviewEmoticons : false,
             allowImageUpload : false,
             items : [
-                'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
-                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
-                'insertunorderedlist', '|', 'link'],
+            'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+            'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+            'insertunorderedlist', '|', 'link'],
             width: '100%',
             autoHeightMode : true,
             afterCreate : function() {
                 this.loadPlugin('autoheight');
             }
         });
-        KindEditor.html('textarea[name="comments"]', $(this).attr('data-comments'));
+        KindEditor.html('textarea[name="comments"]', $('.CurrentComment').html());
     })
 
     $('#comments-modal').on('hidden.bs.modal', function () {
@@ -54,9 +54,9 @@ $(document).ready(function() {
     })
 
     $(".comments").dblclick(function(){
-        var primary_key = $(this).parent().find('td').first().text();
+        var primary_key = $(this).parent().find('td span.primary-key').text();
         var comments = $(this).parent().find('td').last().text();
-        $('#comments-modal').attr('data-comments', comments);
+        $(this).addClass('CurrentComment')
         $('#comments-modal').attr('data-primary_key', primary_key);
         $('#comments-modal').modal('show');
     });
@@ -68,9 +68,31 @@ $(document).ready(function() {
     $('.comments').mouseenter(function(){
         var that = $(this)
         that.tooltip('show');
-        setTimeout(function(){
-            that.tooltip('hide');
-        }, 2000);
+    setTimeout(function(){
+        that.tooltip('hide');
+    }, 2000);
+    });
+
+    $("#btn-submit").click(function(){
+        var comments = editor.html()
+        var primary_key = $('#comments-modal').attr('data-primary_key')
+        var table_name = $('.main-table').attr('table_name')
+        var key_name = $('.main-table').attr('key_name')
+        $.post($SCRIPT_ROOT + "/_update_table",
+            {
+                comments: comments,
+                primary_key: primary_key,
+                table_name: table_name,
+                key_name: key_name
+            },
+            function(data,status){
+                if (data.status == 'success') {
+                    // console.log("Data: " + data + "\nStatus: " + status);
+                    $('.CurrentComment').html(comments)
+                    $('.CurrentComment').removeClass('CurrentComment')
+                    $('#comments-modal').modal('hide');
+                }
+            });
     });
 
 });

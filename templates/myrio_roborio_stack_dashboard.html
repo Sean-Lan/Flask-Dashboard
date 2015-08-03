@@ -6,9 +6,9 @@
 {% block content %}
 {{ super() }}
 <div id="main" style="margin: 0; padding: 0;">
-    <h1>myRIO/roboRIO 2016 Stack Dashboard</h1>
+    <h1>myRIO/roboRIO {{ year }} Stack Dashboard</h1>
     <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover table-condensed">
+        <table class="table table-striped table-bordered table-hover table-condensed main-table" table_name={{ table_name }} key_name={{ key_name }}>
             <thead>
                 <tr>
                     <th>Validated Stack</th>
@@ -22,7 +22,7 @@
             <tbody>
                 {% for record in records %}
                 <tr>
-                    <td><a href="{{ record['validated_stack_url'] }}">{{ record['validated_stack'] }}</a></td>
+                    <td><a href="{{ record['validated_stack_url'] }}"><span class="primary-key">{{ record['validated_stack'] }}</span></a></td>
                     <td>{{ record['lv_version'] }}</td>
                     <td>{{ record['lv_api_version'] }}</td>
                     <td>{{ record['safemode'] }}</td>
@@ -33,7 +33,7 @@
                     </td>
                     <td class="comments">
                     {% if record['comment'] %}
-                        {{ record['comment'] }}
+                        {{ record['comment'] | safe }}
                     {% endif %}
                     </td>
                 </tr>
