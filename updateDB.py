@@ -1,6 +1,6 @@
 from model.DBUtilities import Model
 from utilities import niweb, installer, bundle
-from utilities.record import remove_path_prefix
+from utilities import remove_path_prefix
 import main_config
 import LogConfig
 import logging

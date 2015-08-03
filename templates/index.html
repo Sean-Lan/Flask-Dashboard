@@ -2,22 +2,27 @@
 {% block title %}myRIO/roboRIO Stack Dashboard{% endblock %}
 {% block head %}
 {{ super() }}
-<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
 <script>
 $(document).ready(
-    function(){        
-        $("#main-frame").load(
-            function(){
-                $(this).width($(this).parent().width())
-                $(this).height($(this).contents().find("html").height())
-            } 
-        )
-});
+        function(){        
+            $("#main-frame").load(
+                    function(){
+                        $(this).width($(this).parent().width())
+                        var windowHeight = $(document).height() - $('nav').height() - 10;
+                        // $(this).height($(this).contents().find("html").height())
+                        $(this).height(windowHeight)
+                    } 
+                    );
+
+        });
 
 window.onresize=function(){  
     var iframe = $("#main-frame")
-    iframe.height((iframe.contents().find("html").height()))
-    iframe.width($("#main-frame").parent().width()) 
+        // iframe.height((iframe.contents().find("html").height()))
+        var windowHeight = $(document).height() - $('nav').height() - 10
+        iframe.height(windowHeight);
+        iframe.width($("#main-frame").parent().width())
 }
 </script>
 {% endblock %}
@@ -46,6 +51,8 @@ window.onresize=function(){
         </div>
     </div>
 </nav>
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
@@ -61,9 +68,10 @@ window.onresize=function(){
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <iframe name="main-frame" src="myrio_roborio_2016_stack_dashboard" scrolling="no" marginHeight=0 marginWidth=0 frameborder="0" id="main-frame">
+            <iframe name="main-frame" src="myrio_roborio_2016_stack_dashboard" marginHeight=0 marginWidth=0 frameborder="0" id="main-frame">
             </iframe>
         </div>
     </div>
 </div>
+
 {% endblock %}
