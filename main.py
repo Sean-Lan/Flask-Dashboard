@@ -4,11 +4,27 @@ import main_config
 from flask import Flask, request, session, g, redirect, url_for, \
         abort, render_template, flash, jsonify
 from contextlib import closing
-from utilities import add_path_prefix, get_date
+from utilities import add_path_prefix, get_date, get_stack_date
 from model.DBUtilities import Model
 
 # create application
 app = Flask(__name__)
+
+def get_sanity_test_result(stack_name, bottom_line=1.0):
+    model = Model('stack_test_result')
+    column_list = ['pass_rate']
+    condition_dict = { 'validated_stack': stack_name }
+    records = model.select(column_list, condition_dict)
+    pass_rates = [record['pass_rate'] for record in records]
+    average_pass_rates = float(sum(pass_rates))/len(pass_rates) \
+                if len(pass_rates) > 0 else -1
+    if average_pass_rates == -1:
+        return 'Not Tested'
+    elif average_pass_rates >= bottom_line:
+        return 'Pass'
+    else:
+        return 'Failed'
+    
 
 @app.route('/')
 def index():
@@ -21,9 +37,14 @@ def myrio_roborio_stack_dashboard(year):
     key_name = 'validated_stack'
     model = Model(table_name)
     column_list = ['validated_stack', 'validated_stack_url', 'lv_version', 'lv_api_version', 
-            'safemode', 'sanity_test_result', 'sanity_test_result_url', 'comment']
+            'safemode', 'comment']
     records = model.select(column_list)
     records = sorted(records, key=lambda record: record['validated_stack'], reverse=True)
+    for record in records:
+        stack_date = get_stack_date(record['validated_stack'])
+        sanity_test_result = get_sanity_test_result(stack_date, main_config.SANITY_TEST_BOTTOMLINE)
+        record['sanity_test_result'] = sanity_test_result
+
     return render_template('myrio_roborio_stack_dashboard.html', records=records, year=year,
             table_name=table_name, key_name = key_name)
 
@@ -87,10 +108,3 @@ def test():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-    # model = Model('myrio_roborio_2016_stack_dashboard')
-    # column_list = ['validated_stack', 'validated_stack_url', 'lv_version', 'lv_api_version', 
-    #         'safemode', 'sanity_test_result', 'sanity_test_result_url', 'comment']
-    # records = model.select(column_list)
-    # records = sorted(records, key=lambda record: record['validated_stack'], reverse=True)
-    # for record in records:
-    #     print record
