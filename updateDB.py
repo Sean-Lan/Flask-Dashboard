@@ -1,6 +1,5 @@
 from model.DBUtilities import Model
-from utilities import niweb, installer, bundle
-from utilities import remove_path_prefix
+from utilities import niweb, installer, bundle, remove_path_prefix, testing
 import main_config
 import LogConfig
 import logging
@@ -88,6 +87,38 @@ def update_bundle_installer(table_name, bundle_root, products, DVD_names, date):
         except Exception as e:
             logger.warning('Exception happened: %s', e)
 
+
+def update_stack_test_results(root_folder, rating_dict, default_weight):
+    LogConfig.init_logging()
+    logger = logging.getLogger(__name__)
+    daily_folders = testing.get_daily_directories(root_folder)
+    model = Model('stack_test_result')
+    column_list = ['daily_folder',]
+    parsed_folders = [record['daily_folder'] for record in model.select(column_list)]
+    
+    for daily_folder in daily_folders:
+        if daily_folder in parsed_folders:
+            continue
+        try:
+            daily_results = testing.get_daily_results_from_daily_directory(daily_folder)
+            parsed_results = testing.parse_test_result(daily_results, 
+                    rating_dict, default_weight)
+            crio_date = parsed_results['crio_date']
+            results = parsed_results['results']
+            for os_name, pass_rates in results.items():
+                for target_model, pass_rate in pass_rates.items():
+                    table_record = {
+                            'daily_folder': daily_folder,
+                            'validated_stack': crio_date,
+                            'os_name': os_name,
+                            'target_name': target_model,
+                            'pass_rate': pass_rate
+                    }
+                    model.insert(table_record)
+        except Exception as e:
+            logger.warning('Exception happened: %s', e)
+        
+
 if __name__ == '__main__':
     LogConfig.init_logging()
     logger = logging.getLogger(__name__)
@@ -124,3 +155,8 @@ if __name__ == '__main__':
             ['roboRIO'], 
             ['roboRIO_DVD1', 'roboRIO_DVD2'], 
             main_config.NEWER_THAN_DATE)
+
+    logger.info('UPDATE TABLE %s', 'stack_test_result')
+    update_stack_test_results(main_config.SANITY_TEST_ROOT_FOLDER,
+            main_config.SANITY_TEST_RATING_DICT,
+            main_config.SANITY_TEST_DEFAULT_WEIGHT)

@@ -11,3 +11,15 @@ ROBORIO_TOOLKIT_INSTALLER_DAILY_FOLDER = r'\\us-aus-argo\NISoftwarePrerelease\ro
 MYRIO_BUNDLE_INSTALLER_DAILY_FOLDER = r'\\cn-sha-argo\NISoftwarePrerelease\myRIO\Bundle\3.1\Daily'
 
 ROBORIO_BUNDLE_INSTALLER_DAILY_FOLDER = r'\\cn-sha-argo\NISoftwarePrerelease\roboRIO\Bundle\3.1\Daily'
+
+SANITY_TEST_ROOT_FOLDER = r'C:\Users\xlan\Desktop\SanityTest'
+
+SANITY_TEST_RATING_DICT = {
+    'Test_Install Software.vi': 5, 
+    'test_upgrading_firmware target.vi': 4, 
+    'test_renaming target.vi': 3, 
+    'test_format target.vi':  2
+}
+
+SANITY_TEST_DEFAULT_WEIGHT = 3
+

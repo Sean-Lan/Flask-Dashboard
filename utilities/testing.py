@@ -1,18 +1,11 @@
-import csv
-import os
-import re
-from bs4 import BeautifulSoup
 """
     If you find my code is tedious, congratulations! My code sucks because
     the demand sucks. Look, the final parsed results look like this:
     {'results': 
         {'Windows 7 (32-bit SP1 English)': 
-            {'pass_rates':
                 {'roboRIO': 1.0, 
                  'myRIO-1950': 1.0, 
                  'myRIO-1900': 0.77},
-             'path': '\\\\cn-sha-rdfs01\\AutoTestData\\Report\\myRIO\\2015\\RT\\myRIO2015_AllSanityTest\\20150722_164143\\Windows 7 (32-bit SP1 English)'
-            },
          ...
         },
       'crio_date': '20150624_1715f3'
@@ -20,8 +13,6 @@ from bs4 import BeautifulSoup
     and the raw test results are even scaring:
     {'results': 
         {'Windows 7 (32-bit SP1 English)': 
-            {'path': '\\\\cn-sha-rdfs01\\AutoTestData\\Report\\myRIO\\2015\\RT\\myRIO2015_AllSanityTest\\20150722_164143\\Windows 7 (32-bit SP1 English)',
-             'tests': 
                 {'roboRIO': 
                     {'Test_Install Software.vi': 'Passed', 
                      'test_upgrading_firmware target.vi': 'Passed',
@@ -38,7 +29,6 @@ from bs4 import BeautifulSoup
                      'test_renaming target.vi': 'Passed', 
                      'test_format target.vi': 'Failed'}
                 }
-            },
         ...
         }, 
      'crio_date': '20150624_1715f3'
@@ -47,6 +37,11 @@ from bs4 import BeautifulSoup
     I write down this to calm you down, and hope you won't maintain my code.
     OKay, here is the doc for this module! :)
 """
+
+import csv
+import os
+import re
+from bs4 import BeautifulSoup
 
 def get_test_result_from_csv_file(file_name):
     """
@@ -119,8 +114,7 @@ def get_csv_files_from_daily_directory(daily_directory):
         os_csv_dict[os_name] = {}
         os_directory = os.path.join(daily_directory, os_name)
         csv_files = get_csv_files_from_os_directory(os_directory)
-        os_csv_dict[os_name]['csv_files'] = csv_files
-        os_csv_dict[os_name]['path'] = os_directory
+        os_csv_dict[os_name] = csv_files
     return os_csv_dict
 
 def get_daily_results_from_daily_directory(daily_directory):
@@ -131,10 +125,8 @@ def get_daily_results_from_daily_directory(daily_directory):
     daily_results['results'] = {}
     for os_name in os_csv_dict:
         daily_results['results'][os_name] = {}
-        daily_results['results'][os_name]['tests'] = \
-        get_target_results_from_cvs_files(os_csv_dict[os_name]['csv_files'])
-        daily_results['results'][os_name]['path'] = \
-                os_csv_dict[os_name]['path']
+        daily_results['results'][os_name] = \
+        get_target_results_from_cvs_files(os_csv_dict[os_name])
     return daily_results
 
 
@@ -166,13 +158,10 @@ def parse_test_result(daily_results, rating_dict, default_weight):
     parsed_results = {}
     parsed_results['crio_date'] = daily_results['crio_date']
     parsed_results['results'] = {}
-    for os_name, results in daily_results['results'].items():
+    for os_name, target_results in daily_results['results'].items():
         parsed_results['results'][os_name] = {}
-        parsed_results['results'][os_name]['pass_rates'] = {}
-        parsed_results['results'][os_name]['path'] = results['path']
-        target_results = results['tests']
         for target_model, results in target_results.items():
-            parsed_results['results'][os_name]['pass_rates'][target_model] = \
+            parsed_results['results'][os_name][target_model] = \
                     calculate_pass_rate(results, rating_dict, default_weight)
     return parsed_results
 
@@ -204,5 +193,6 @@ if __name__ == '__main__':
         'test_format target.vi':  2
     }
     default_weight = 3
+
     parsed_results = parse_test_result(daily_results, rating_dict, default_weight)
     print parsed_results
