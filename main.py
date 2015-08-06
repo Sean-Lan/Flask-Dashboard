@@ -101,6 +101,26 @@ def update_table():
     return jsonify(status='success')
 
 
+@app.route('/detailed_sainity_test_result')
+def detailed_sainity_test_result():
+    stack_date = request.args.get('stack_date')
+    model = Model('stack_test_result')
+    column_list = ['daily_folder', 'pass_rate', 'validated_stack',
+            'os_name', 'target_name']
+    condition_dict = { 'validated_stack': stack_date }
+    test_records = model.select(column_list, condition_dict)
+    for record in test_records:
+        record['test_date'] = record['daily_folder'].split('\\')[-1]
+        record['os_folder_path'] = os.path.join(
+                record['daily_folder'],
+                record['os_name']
+                )
+    return render_template('detailed_sainity_test_result.html', 
+            records = test_records, 
+            stack_date = stack_date,
+            bottom_line = main_config.SANITY_TEST_BOTTOMLINE)
+
+
 @app.route('/test')
 def test():
     return render_template('test.html')

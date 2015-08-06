@@ -2,6 +2,19 @@
 {% block title %}myRIO/roboRIO 2016 Stack Dashboard{% endblock %}
 {% block head %}
 {{ super() }}
+<script>
+$(document).ready(function(){
+    $("td.detail a").click(function() {
+        console.log('hahahah'); 
+        console.log('Root' + $SCRIPT_ROOT);
+        var stack_name = $(this).parents('tr').find('td').first().text();
+        console.log(stack_name)
+        stack_date = stack_name.match(/\d{8}_\d+[dabf]\d+/)[0];
+        console.log(stack_date);
+        $(this).attr("href", "/detailed_sainity_test_result?stack_date="+stack_date);
+            });
+});
+</script>
 {% endblock %}
 {% block content %}
 {{ super() }}
@@ -26,11 +39,13 @@
                     <td>{{ record['lv_version'] }}</td>
                     <td>{{ record['lv_api_version'] }}</td>
                     <td>{{ record['safemode'] }}</td>
-                    <td>
-                    {% if record['sanity_test_result'] %}
-                    <a href="{{ record['sanity_test_result_url'] }}">{{ record['sanity_test_result'] }}</a>
+                    {% if record['sanity_test_result'] == 'Not Tested' %}
+                    <td class='detail text-muted'>{{ record['sanity_test_result'] }}</td>
+                    {% elif record['sanity_test_result'] == 'Pass' %}
+                    <td class='detail bg-success text-success'><a href="#">{{ record['sanity_test_result'] }}</a></td>
+                    {% else %}
+                    <td class='detail bg-danger text-danger'><a href="#">{{ record['sanity_test_result'] }}</a></td>
                     {% endif %}
-                    </td>
                     <td class="comments" onselectstart="return false">
                     {% if record['comment'] %}
                         {{ record['comment'] | safe }}
