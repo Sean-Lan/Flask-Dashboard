@@ -28,7 +28,7 @@ def get_sanity_test_result(stack_name, bottom_line=1.0):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', years=main_config.INDEX_SIDEBAR_YEARS)
 
 
 @app.route('/myrio_roborio_stack_dashboard/<year>')

@@ -10,7 +10,6 @@ $(document).ready(
                     function(){
                         $(this).width($(this).parent().width())
                         var windowHeight = $(document).height() - $('nav').height() - 10;
-                        // $(this).height($(this).contents().find("html").height())
                         $(this).height(windowHeight)
                     } 
                     );
@@ -19,7 +18,6 @@ $(document).ready(
 
 window.onresize=function(){  
     var iframe = $("#main-frame")
-        // iframe.height((iframe.contents().find("html").height()))
         var windowHeight = $(document).height() - $('nav').height() - 10
         iframe.height(windowHeight);
         iframe.width($("#main-frame").parent().width())
@@ -58,13 +56,19 @@ window.onresize=function(){
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 <li class="active"><a class="text-center section-label"><b>myRIO/roboRIO</b></a></li>   
-                <li><a target="main-frame" href="myrio_roborio_stack_dashboard/2016" id="welcome-link">myRIO/roboRIO Stack Dashboard</a></li>
+                {% for year in years%}
+                <li><a target="main-frame" href="myrio_roborio_stack_dashboard/{{ year }}" id="welcome-link">myRIO/roboRIO Stack Dashboard {{ year }}</a></li>
+                {% endfor %}
                 <li class="active"><a class="text-center section-label"><b>myRIO</b></a></li>   
-                <li><a target="main-frame" href="toolkit_installer_dashboard/myRIO/2016">Toolkit Installer Dashboard</a></li> 
-                <li><a target="main-frame" href="bundle_installer_dashboard/myRIO/2016">Bundle Installer Dashboard</a></li> 
+                {% for year in years%}
+                <li><a target="main-frame" href="toolkit_installer_dashboard/myRIO/{{ year }}">Toolkit Installer Dashboard {{ year }}</a></li> 
+                <li><a target="main-frame" href="bundle_installer_dashboard/myRIO/{{ year }}">Bundle Installer Dashboard {{ year }}</a></li> 
+                {% endfor %}
                 <li class="active"><a class="text-center section-label"><b>roboRIO</b></a></li>   
-                <li><a target="main-frame" href="toolkit_installer_dashboard/roboRIO/2016">Toolkit Installer Dashboard</a></li> 
-                <li><a target="main-frame" href="bundle_installer_dashboard/roboRIO/2016">Bundle Installer Dashboard</a></li> 
+                {% for year in years%}
+                <li><a target="main-frame" href="toolkit_installer_dashboard/roboRIO/{{ year }}">Toolkit Installer Dashboard {{ year }}</a></li> 
+                <li><a target="main-frame" href="bundle_installer_dashboard/roboRIO/{{ year }}">Bundle Installer Dashboard {{ year }}</a></li> 
+                {% endfor %}
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

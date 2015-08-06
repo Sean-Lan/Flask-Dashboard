@@ -117,46 +117,51 @@ def update_stack_test_results(root_folder, rating_dict, default_weight):
                     model.insert(table_record)
         except Exception as e:
             logger.warning('Exception happened: %s', e)
-        
 
-if __name__ == '__main__':
-    LogConfig.init_logging()
+        
+def update_db(year):
+    year = str(year)
     logger = logging.getLogger(__name__)
 
-    logger.info('UPDATE TABLE %s', 'myrio_roborio_2016_stack_dashboard')
-    update_stack_dashboard('myrio_roborio_2016_stack_dashboard', 
+    logger.info('UPDATE TABLE myrio_roborio_%s_stack_dashboard', year)
+    update_stack_dashboard('myrio_roborio_'+year+'_stack_dashboard', 
             main_config.STACK_WEB_URL, 
             main_config.NEWER_THAN_DATE)
 
-    logger.info('UPDATE TABLE %s', 'myrio_2016_toolkit_installer_dashboard')
-    update_toolkit_installer('myrio_2016_toolkit_installer_dashboard', 
+    logger.info('UPDATE TABLE myrio_%s_toolkit_installer_dashboard', year)
+    update_toolkit_installer('myrio_'+year+'_toolkit_installer_dashboard', 
             main_config.MYRIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
             'myRIO', 
             ['myRIO-1900'], 
             main_config.NEWER_THAN_DATE)
 
-    logger.info('UPDATE TABLE %s', 'roborio_2016_toolkit_installer_dashboard')
-    update_toolkit_installer('roborio_2016_toolkit_installer_dashboard', 
+    logger.info('UPDATE TABLE roborio_%s_toolkit_installer_dashboard', year)
+    update_toolkit_installer('roborio_'+year+'_toolkit_installer_dashboard', 
             main_config.ROBORIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
             'roboRIO', 
             ['roboRIO'], 
             main_config.NEWER_THAN_DATE)
 
-    logger.info('UPDATE TABLE %s', 'myrio_2016_bundle_installer_dashboard')
-    update_bundle_installer('myrio_2016_bundle_installer_dashboard', 
+    logger.info('UPDATE TABLE myrio_%s_bundle_installer_dashboard', year)
+    update_bundle_installer('myrio_'+year+'_bundle_installer_dashboard', 
             main_config.MYRIO_BUNDLE_INSTALLER_DAILY_FOLDER, 
             ['myRIO-1900'], 
             ['myRIO_DVD1', 'myRIO_DVD2'],
             main_config.NEWER_THAN_DATE)
 
-    logger.info('UPDATE TABLE %s', 'roborio_2016_bundle_installer_dashboard')
-    update_bundle_installer('roborio_2016_bundle_installer_dashboard', 
+    logger.info('UPDATE TABLE roborio_%s_bundle_installer_dashboard', year)
+    update_bundle_installer('roborio_'+year+'_bundle_installer_dashboard', 
             main_config.ROBORIO_BUNDLE_INSTALLER_DAILY_FOLDER, 
             ['roboRIO'], 
             ['roboRIO_DVD1', 'roboRIO_DVD2'], 
             main_config.NEWER_THAN_DATE)
 
-    logger.info('UPDATE TABLE %s', 'stack_test_result')
+    logger.info('UPDATE TABLE stack_test_result')
     update_stack_test_results(main_config.SANITY_TEST_ROOT_FOLDER,
             main_config.SANITY_TEST_RATING_DICT,
             main_config.SANITY_TEST_DEFAULT_WEIGHT)
+
+if __name__ == '__main__':
+    LogConfig.init_logging()
+    update_db(main_config.CURRENT_YEAR)
+

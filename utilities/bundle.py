@@ -42,7 +42,7 @@ def getdirsize(dir):
     return size 
 
 
-def redupesize(dir, depduped_dict = {}, used_dict = {}):
+def redupesize(dir, deduped_dict = {}, used_dict = {}):
     """
     Dedupe:
     With regard to files with the same name,
