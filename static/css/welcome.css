@@ -1,0 +1,14 @@
+#welcomeCarousel {
+    height: 620px;
+}
+
+#welcomeCarousel ol li {
+    border-color:#888;
+}
+
+.flash {
+    background: #f0d6d6;
+    text-align: center;
+    padding: 0.5em;
+    border: 1px solid #aacbe2;
+}

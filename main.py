@@ -24,15 +24,41 @@ def get_sanity_test_result(stack_name, bottom_line=1.0):
         return 'Pass'
     else:
         return 'Failed'
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.form['username'] != 'admin':
+        flash('Invalid username')
+    elif request.form['password'] != 'admin':
+        flash('Invalid password')
+    else:
+        session['logged_in'] = True
+        session['username'] = 'admin'
+        return redirect(url_for('index'))
+    return redirect(url_for('welcome')) 
+        
+@app.route('/logout')
+def logout():
+    session.pop('logged_in')
+    session.pop('username')
+    flash('You were logged out')
+    return redirect(url_for('welcome')) 
     
 
 @app.route('/')
 def index():
-    return render_template('index.html', years=main_config.INDEX_SIDEBAR_YEARS)
+    if not session.get('logged_in'):
+        flash('Please login.')
+        return redirect(url_for('welcome'))
+    return render_template('index.html', username=session['username'],
+            years=main_config.INDEX_SIDEBAR_YEARS)
 
 
 @app.route('/myrio_roborio_stack_dashboard/<year>')
 def myrio_roborio_stack_dashboard(year):
+    if not session.get('logged_in'):
+        flash('Please login.')
+        return redirect(url_for('welcome'))
     table_name = 'myrio_roborio_' + year + '_stack_dashboard'
     key_name = 'validated_stack'
     model = Model(table_name)
@@ -51,6 +77,9 @@ def myrio_roborio_stack_dashboard(year):
 
 @app.route('/toolkit_installer_dashboard/<name>/<year>')
 def toolkit_installer_dashboard(name, year):
+    if not session.get('logged_in'):
+        flash('Please login.')
+        return redirect(url_for('welcome'))
     table_name = name+'_'+year+'_toolkit_installer_dashboard'
     key_name = 'installer_path'
     model = Model(table_name)
@@ -68,6 +97,9 @@ def toolkit_installer_dashboard(name, year):
 
 @app.route('/bundle_installer_dashboard/<name>/<year>')
 def bundle_installer_dashboard(name, year):
+    if not session.get('logged_in'):
+        flash('Please login.')
+        return redirect(url_for('welcome'))
     table_name = name+'_'+year+'_bundle_installer_dashboard'
     key_name = 'bundle_path'
     model = Model(table_name)
@@ -88,6 +120,8 @@ def bundle_installer_dashboard(name, year):
 
 @app.route('/_update_table', methods=['POST'])
 def update_table():
+    if not session.get('logged_in'):
+        abort(401) 
     table_name = request.form['table_name']
     key_name = request.form['key_name']
     primary_key = request.form['primary_key']
@@ -121,10 +155,11 @@ def detailed_sainity_test_result():
             bottom_line = main_config.SANITY_TEST_BOTTOMLINE)
 
 
-@app.route('/test')
-def test():
-    return render_template('test.html')
+@app.route('/welcome')
+def welcome():
+    return render_template('welcome.html')
 
 
 if __name__ == '__main__':
+    app.secret_key = "Sean Lan"
     app.run(host='0.0.0.0', debug=True)
