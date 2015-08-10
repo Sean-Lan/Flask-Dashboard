@@ -27,9 +27,9 @@ def get_sanity_test_result(stack_name, bottom_line=1.0):
 
 @app.route('/login', methods=['POST'])
 def login():
-    if request.form['username'] != 'admin':
+    if request.form['username'] != main_config.DASHBOARD_USER_NAME:
         flash('Invalid username')
-    elif request.form['password'] != 'admin':
+    elif request.form['password'] != main_config.DASHBOARD_PASSWORD:
         flash('Invalid password')
     else:
         session['logged_in'] = True
@@ -62,17 +62,19 @@ def myrio_roborio_stack_dashboard(year):
     table_name = 'myrio_roborio_' + year + '_stack_dashboard'
     key_name = 'validated_stack'
     model = Model(table_name)
-    column_list = ['validated_stack', 'validated_stack_url', 'lv_version', 'lv_api_version', 
-            'safemode', 'comment']
+    column_list = ['validated_stack', 'validated_stack_url', 'lv_version', 
+            'lv_api_version', 'safemode', 'comment']
     records = model.select(column_list)
-    records = sorted(records, key=lambda record: record['validated_stack'], reverse=True)
+    records = sorted(records, key=lambda record: record['validated_stack'], 
+            reverse=True)
     for record in records:
         stack_date = get_stack_date(record['validated_stack'])
-        sanity_test_result = get_sanity_test_result(stack_date, main_config.SANITY_TEST_BOTTOMLINE)
+        sanity_test_result = get_sanity_test_result(stack_date, 
+                main_config.SANITY_TEST_BOTTOMLINE)
         record['sanity_test_result'] = sanity_test_result
 
-    return render_template('myrio_roborio_stack_dashboard.html', records=records, year=year,
-            table_name=table_name, key_name = key_name)
+    return render_template('myrio_roborio_stack_dashboard.html', records=records, 
+            year=year, table_name=table_name, key_name = key_name)
 
 
 @app.route('/toolkit_installer_dashboard/<name>/<year>')
@@ -86,13 +88,16 @@ def toolkit_installer_dashboard(name, year):
     column_list = ['installer_path', 'lv_version', 'lv_api_version', 
             'safemode', 'comment']
     records = model.select(column_list)
-    records = sorted(records, key=lambda record: record['installer_path'], reverse=True)
+    records = sorted(records, 
+                     key=lambda record: record['installer_path'], 
+                     reverse=True)
     for record in records:
         record['installer_date'] = get_date(record['installer_path'])
         record['installer_path'] = add_path_prefix(record['installer_path'],
                 main_config.PATH_PREFIX).rstrip('\\')
-    return render_template('toolkit_installer_dashboard.html', records=records, name=name, 
-            year=year, table_name = table_name, key_name = key_name)
+    return render_template('toolkit_installer_dashboard.html', records=records, 
+                           name=name, year=year, table_name = table_name, 
+                           key_name = key_name)
 
 
 @app.route('/bundle_installer_dashboard/<name>/<year>')
@@ -106,7 +111,9 @@ def bundle_installer_dashboard(name, year):
     column_list = ['bundle_path', 'lv_version', 'lv_api_version', 'toolkit_path',
             'safemode', 'actual_size', 'dedupe_size', 'comment']
     records = model.select(column_list)
-    records = sorted(records, key=lambda record: record['bundle_path'], reverse=True)
+    records = sorted(records, 
+                     key=lambda record: record['bundle_path'], 
+                     reverse=True)
     for record in records:
         record['bundle_date'] = get_date(record['bundle_path'])
         record['bundle_path'] = add_path_prefix(record['bundle_path'],
@@ -114,8 +121,8 @@ def bundle_installer_dashboard(name, year):
         record['toolkit_date'] = get_date(record['toolkit_path'])
         record['toolkit_path'] = add_path_prefix(record['toolkit_path'],
                 main_config.PATH_PREFIX).rstrip('\\')
-    return render_template('bundle_installer_dashboard.html', records=records, name=name, 
-            year=year, table_name = table_name, key_name = key_name)
+    return render_template('bundle_installer_dashboard.html', records=records, 
+            name=name, year=year, table_name = table_name, key_name = key_name)
 
 
 @app.route('/_update_table', methods=['POST'])
@@ -161,5 +168,6 @@ def welcome():
 
 
 if __name__ == '__main__':
-    app.secret_key = "Sean Lan"
+    # Flask needs a secret_key to encrypt session
+    app.secret_key = "Academic Software Group"
     app.run(host='0.0.0.0', debug=True)
