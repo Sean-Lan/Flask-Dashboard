@@ -35,7 +35,7 @@ SANITY_TEST_RATING_DICT = {
     # add the test cases you want to change the default weight
 }
 
-# The dafualt weight for calculating the pass rate
+# The default weight for calculating the pass rate
 SANITY_TEST_DEFAULT_WEIGHT = 3
 
 # The bottom line of pass rate.

@@ -142,7 +142,7 @@ def update_table():
     return jsonify(status='success')
 
 
-@app.route('/detailed_sainity_test_result')
+@app.route('/detailed_sanity_test_result')
 def detailed_sainity_test_result():
     stack_date = request.args.get('stack_date')
     model = Model('stack_test_result')
@@ -156,7 +156,7 @@ def detailed_sainity_test_result():
                 record['daily_folder'],
                 record['os_name']
                 )
-    return render_template('detailed_sainity_test_result.html', 
+    return render_template('detailed_sanity_test_result.html', 
             records = test_records, 
             stack_date = stack_date,
             bottom_line = main_config.SANITY_TEST_BOTTOMLINE)
