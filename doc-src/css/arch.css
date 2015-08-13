@@ -1,0 +1,103 @@
+#arch {
+    width: 100%;
+}
+#desktop, #rdfs01 {
+    float: left;
+    margin-left: 5%;
+    text-align:center;
+    width: 20%;
+    height: 20%;
+}
+
+.clear {
+    clear: both;
+}
+
+#argo {
+    float: left;
+    margin-left: 15%;
+    text-align:center;
+    width: 20%;
+    height: 20%;
+}
+
+#database {
+    float: left;
+    margin-left: 5%;
+    text-align:center;
+    width: 25%;
+    height: 25%;
+}
+
+#parser {
+    float: left;
+    text-align:center;
+    width: 20%;
+    height: 20%;
+}
+
+#niweb {
+    float: left;
+    margin-left: 30%;
+    text-align:center;
+    width: 20%;
+    height: 20%;
+}
+
+#server {
+    float: left;
+    text-align:center;
+    width: 25%;
+    height: 25%;
+}
+
+#updatedb {
+    float: left;
+    margin-left: 10%;
+    text-align:center;
+    width: 20%;
+    height: 20%;
+}
+
+#dsk-svr-line, #rdfs-ps-line {
+    float: left;
+    margin-left: 2%;
+    text-align:center;
+    width: 10%;
+    height: 10%;
+}
+
+#svr-db-line {
+    float: left;
+    text-align:center;
+    margin-right: -5%;
+    width: 10%;
+    height: 10%;
+}
+
+#db-ps-line {
+    float: left;
+    margin-left: 50%;
+    width: 20%;
+    height: 20%;
+}
+
+#db-dc-line {
+    float: left;
+    width: 10%;
+    height: 10%;
+}
+
+#dc-niweb-line {
+    float: left;
+    margin-left: 45%;
+    width: 20%;
+    height: 20%;
+}
+
+#dc-argo-line {
+    float: left;
+    margin-left: 5%;
+    width: 10%;
+    height: 10%;
+}
