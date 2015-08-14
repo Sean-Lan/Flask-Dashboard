@@ -123,24 +123,24 @@ def update_db(year):
     year = str(year)
     logger = logging.getLogger(__name__)
 
-    # logger.info('UPDATE TABLE myrio_roborio_%s_stack_dashboard', year)
-    # update_stack_dashboard('myrio_roborio_'+year+'_stack_dashboard', 
-    #         main_config.STACK_WEB_URL, 
-    #         main_config.NEWER_THAN_DATE)
+    logger.info('UPDATE TABLE myrio_roborio_%s_stack_dashboard', year)
+    update_stack_dashboard('myrio_roborio_'+year+'_stack_dashboard', 
+            main_config.STACK_WEB_URL, 
+            main_config.NEWER_THAN_DATE)
 
-    # logger.info('UPDATE TABLE myrio_%s_toolkit_installer_dashboard', year)
-    # update_toolkit_installer('myrio_'+year+'_toolkit_installer_dashboard', 
-    #         main_config.MYRIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
-    #         'myRIO', 
-    #         ['myRIO-1900'], 
-    #         main_config.NEWER_THAN_DATE)
+    logger.info('UPDATE TABLE myrio_%s_toolkit_installer_dashboard', year)
+    update_toolkit_installer('myrio_'+year+'_toolkit_installer_dashboard', 
+            main_config.MYRIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
+            'myRIO', 
+            ['myRIO-1900'], 
+            main_config.NEWER_THAN_DATE)
 
-    # logger.info('UPDATE TABLE roborio_%s_toolkit_installer_dashboard', year)
-    # update_toolkit_installer('roborio_'+year+'_toolkit_installer_dashboard', 
-    #         main_config.ROBORIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
-    #         'roboRIO', 
-    #         ['roboRIO'], 
-    #         main_config.NEWER_THAN_DATE)
+    logger.info('UPDATE TABLE roborio_%s_toolkit_installer_dashboard', year)
+    update_toolkit_installer('roborio_'+year+'_toolkit_installer_dashboard', 
+            main_config.ROBORIO_TOOLKIT_INSTALLER_DAILY_FOLDER, 
+            'roboRIO', 
+            ['roboRIO'], 
+            main_config.NEWER_THAN_DATE)
 
     logger.info('UPDATE TABLE myrio_%s_bundle_installer_dashboard', year)
     update_bundle_installer('myrio_'+year+'_bundle_installer_dashboard', 
@@ -156,10 +156,10 @@ def update_db(year):
             ['roboRIO_DVD1', 'roboRIO_DVD2'], 
             main_config.NEWER_THAN_DATE)
 
-    # logger.info('UPDATE TABLE stack_test_result')
-    # update_stack_test_results(main_config.SANITY_TEST_ROOT_FOLDER,
-    #         main_config.SANITY_TEST_RATING_DICT,
-    #         main_config.SANITY_TEST_DEFAULT_WEIGHT)
+    logger.info('UPDATE TABLE stack_test_result')
+    update_stack_test_results(main_config.SANITY_TEST_ROOT_FOLDER,
+            main_config.SANITY_TEST_RATING_DICT,
+            main_config.SANITY_TEST_DEFAULT_WEIGHT)
 
 if __name__ == '__main__':
     LogConfig.init_logging()

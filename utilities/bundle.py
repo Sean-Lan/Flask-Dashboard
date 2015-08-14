@@ -7,7 +7,8 @@ import msilib
 
 def get_bundle_record(bundle_path, product_names, DVD_names):
     msb_xml = os.path.join(bundle_path, 'MSB_Summary.xml')
-    soup = BeautifulSoup(open(msb_xml).read(), 'lxml')
+    soup = BeautifulSoup(open(msb_xml).read())
+
     # obtain lvVersion and lvAPIVersion from buildInfo.txt of
     # LabVIEW distribution
     lv_tag = soup.find(attrs={'name':re.compile('^LabVIEW')})
