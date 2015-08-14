@@ -2,7 +2,7 @@ import re
 import os
 from record import get_lv_info, get_versions_from_msi
 import installer
-import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 import msilib
 
 def get_bundle_record(bundle_path, product_names, DVD_names):

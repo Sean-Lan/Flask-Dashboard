@@ -41,7 +41,7 @@
 import csv
 import os
 import re
-import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 
 def get_test_result_from_csv_file(file_name):
     """
