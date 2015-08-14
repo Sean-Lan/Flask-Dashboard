@@ -2,7 +2,8 @@ import re
 import os
 from record import get_lv_info, get_versions_from_msi
 import installer
-from bs4 import BeautifulSoup
+import BeautifulSoup
+import msilib
 
 def get_bundle_record(bundle_path, product_names, DVD_names):
     msb_xml = os.path.join(bundle_path, 'MSB_Summary.xml')
@@ -28,8 +29,10 @@ def get_bundle_record(bundle_path, product_names, DVD_names):
     idea_size = []
     for name in DVD_names:
         abs_path = os.path.join(bundle_path, name)
-        actual_size.append(str(getdirsize(abs_path)))
-        idea_size.append(str(redupesize(abs_path)))
+        total_size = getdirsize(abs_path)
+        deduped_size = get_deduped_size(abs_path)
+        actual_size.append(str(total_size))
+        idea_size.append(str(total_size-deduped_size))
     record['actual_size'] = '/'.join(actual_size)
     record['idea_size'] = '/'.join(idea_size)
     return record
@@ -40,34 +43,6 @@ def getdirsize(dir):
     for root, dirs, files in os.walk(dir):  
         size += sum([os.path.getsize(os.path.join(root, name)) for name in files])  
     return size 
-
-
-def redupesize(dir, deduped_dict = {}, used_dict = {}):
-    """
-    Dedupe:
-    With regard to files with the same name,
-    only the last visit file's size counts.
-    If `depuded_dict` is passed in, all depuded file, 
-    and its size is stored in the dict.
-    If `used_dict` is passed in, all final used file, 
-    and its size is stored in the dict.
-    """
-    file_dict = {}
-    fullpath_dict = {}
-    for root, dirs, files in os.walk(dir):
-        for name in files:
-            full_path = os.path.join(root, name)
-            file_size = os.path.getsize(full_path)
-            if name in file_dict: # duplicate file found
-                deduped_path = fullpath_dict[name]
-                deduped_dict[deduped_path] = file_dict[name]
-            fullpath_dict[name] = full_path
-            file_dict[name] = file_size
-    for name in file_dict:
-        used_dict[fullpath_dict[name]] = file_dict[name]
-    return reduce(lambda size, name: size + file_dict[name],
-            file_dict,
-            0)
 
 
 def get_date(date):
@@ -89,30 +64,69 @@ def retrieve_bundle_folders(bundle_root, newer_than_date):
     return bundle_folders
 
 
+def get_deduped_size(dirname):
+    """
+    Find the duplicate products, return the size of the duplicate products.
+    A *duplicate* product is the product with the same UpgradeCode and 
+    older ProductVersion.
+    """
+    product_dict = {}
+    deduped_size = 0L
+    for root, dirs, files in os.walk(dirname):  
+        if len(dirs) != 0:
+            continue
+        files = filter( lambda filename: os.path.splitext(filename)[1] == '.msi',
+                    files
+                    )
+        if len(files) == 0:
+            continue
+        # Get the first msi as a representative
+        msi = sorted(files)[0]
+        fullpath = os.path.join(root, msi)
+        UpgradeCode, ProductVersion = get_installer_info_from_msi(fullpath)
 
+        size = reduce(lambda size, name: size + os.path.getsize(
+                                            os.path.join(root, name)),
+                      files, 0)
+        if UpgradeCode in product_dict:
+            if product_dict[UpgradeCode]['version'] > ProductVersion:
+                deduped_size += size
+            else:
+                deduped_size += product_dict[UpgradeCode]['size']
+                product_dict[UpgradeCode] = {'version': ProductVersion,
+                                             'size': size}
+        else:
+            product_dict[UpgradeCode] = {'version': ProductVersion,
+                                         'size': size}
+
+    return deduped_size
+
+
+def get_installer_info_from_msi(msiPath):
+    """
+    Get the UpgradeCode, ProductVersion from Property table of product msi.
+    """
+    viewSql = "SELECT Value FROM Property WHERE Property = '{field_name}'"
+    db = msilib.OpenDatabase(msiPath,msilib.MSIDBOPEN_READONLY)
+
+    # Get `UpgradeCode`
+    view = db.OpenView(viewSql.format(field_name='UpgradeCode'))
+    view.Execute(None)
+    result = view.Fetch()
+    UpgradeCode = result.GetString(1)
+
+    # Get `ProductVersion`
+    view = db.OpenView(viewSql.format(field_name='ProductVersion'))
+    view.Execute(None)
+    result = view.Fetch()
+    ProductVersion = result.GetString(1)
+
+    return UpgradeCode, ProductVersion
 
 if __name__ == '__main__':
-    # bundle_root = r'\\cn-sha-argo\NISoftwarePrerelease\myRIO\Bundle\3.1\Daily' 
-    # newer_than_date = 20150301
-    # bundle_folders = retrieve_bundle_folders(bundle_root, newer_than_date)
-    # print bundle_folders
-    # bundle_path = r'\\cn-sha-argo\NISoftwarePrerelease\roboRIO\Bundle\3.1\Daily\2015_06_15_1523'
-    # product_names = ['roboRIO']
-    # DVD_names = ['roboRIO_DVD1', 'roboRIO_DVD2']
-    # record = get_bundle_record(bundle_path, product_names, DVD_names)
-    # bundle_path = r'\\cn-sha-argo\NISoftwarePrerelease\roboRIO\Bundle\3.1\Daily\2015_06_15_1523'
-    bundle_path = r'\\cn-sha-argo\NISoftwareReleased\Windows\Suites\LabVIEW Add-ons\myRIO\2015\3.1.0\myRIO_DVD1'
-    deduped_dict = {}
-    used_dict = {}
-    deduped_size = redupesize(bundle_path, deduped_dict, used_dict)
-    print deduped_size
-    f = open('dedupe.log', 'w')
-    f.write('%s files remained, %s files deduped\n\n' % (len(used_dict), len(deduped_dict)))
-    f.write('-'*80)
-    f.write('\n\n')
-    f.write('Remained files(full path, size):\n')
-    for name in sorted(used_dict):
-        f.write(name + ': ' + str(used_dict[name]) + '\n')
-    f.write('\n\nDeduped files(full path, size):\n')
-    for name in sorted(deduped_dict):
-        f.write(name + ': ' + str(deduped_dict[name]) + '\n')
+    bundle_path = r'C:\Users\xlan\Desktop\bundle\2015_06_19_2143'
+    product_names = ['myRIO']
+    DVD_names = ['myRIO_DVD1', 'myRIO_DVD2']
+    record = get_bundle_record(bundle_path, product_names, DVD_names)
+    print record
+

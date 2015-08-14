@@ -1,5 +1,5 @@
 import urllib2
-from bs4 import BeautifulSoup
+import BeautifulSoup
 from record import get_lv_info, get_versions_from_msi
 import os
 NIWEB_URL =  r'http://niweb.natinst.com'
