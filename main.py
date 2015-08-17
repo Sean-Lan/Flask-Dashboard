@@ -51,7 +51,7 @@ def index():
         flash('Please login.')
         return redirect(url_for('welcome'))
     return render_template('index.html', username=session['username'],
-            years=main_config.INDEX_SIDEBAR_YEARS)
+            years=main_config.INDEX_SIDEBAR_YEARS, current_year=main_config.CURRENT_YEAR)
 
 
 @app.route('/myrio_roborio_stack_dashboard/<year>')
@@ -168,7 +168,11 @@ def welcome():
 
 
 if __name__ == '__main__':
-    os.chdir(os.path.dirname(__file__))
+    # make sure the db file in the cwd.
+    cwd = os.path.dirname(__file__)
+    if cwd != '':
+        os.chdir(os.path.dirname(__file__))
+
     # Flask needs a secret_key to encrypt session
     app.secret_key = "Academic Software Group"
     app.run(host='0.0.0.0')

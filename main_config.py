@@ -50,7 +50,7 @@ INDEX_SIDEBAR_YEARS = [
         ]
 
 # The year for update database.
-CURRENT_YEAR = 2016
+CURRENT_YEAR = 2015
 
 # The username and password to login the dashboard
 DASHBOARD_USER_NAME = "admin"
