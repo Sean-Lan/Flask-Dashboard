@@ -121,8 +121,8 @@ def get_installer_info_from_msi(msiPath):
     view.Execute(None)
     result = view.Fetch()
     ProductVersion = result.GetString(1)
-
     return UpgradeCode, ProductVersion
+
 
 if __name__ == '__main__':
     bundle_path = r'C:\Users\xlan\Desktop\bundle\2015_06_19_2143'
@@ -131,3 +131,8 @@ if __name__ == '__main__':
     record = get_bundle_record(bundle_path, product_names, DVD_names)
     print record
 
+    print '-'*100
+
+    bundle_path = r'\\cn-sha-argo\NISoftwarePrerelease\myRIO\Bundle\3.1\Daily\2015_06_15_0752'
+    record = get_bundle_record(bundle_path, product_names, DVD_names)
+    print record

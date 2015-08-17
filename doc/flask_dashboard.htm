@@ -636,6 +636,77 @@ def get_versions_from_msi(msiPath,productNames):
 </code></pre>
 </article></section></slide>
 <slide class="slide"><section class="slide-wrapper"><hgroup>
+<h4>Dedupe process in <code>bundle</code> module</h4>
+
+</hgroup><article>
+
+<ol>
+<li>Find the folder contains <code>.msi</code> files.</li>
+<li>Sort the <code>.msi</code> files and retrieve first of them as a <strong>representative</strong>.</li>
+<li>Get the <code>UpgradeCode</code> and <code>ProductVersion</code> from the <strong>representative</strong>.</li>
+<li>Only keep the installer with the newest <code>ProductVersion</code> if the <code>UpgradeCode</code> is the same.</li>
+</ol>
+
+</article></section></slide>
+<slide class="slide"><section class="slide-wrapper"><hgroup>
+<h4>Dedupe process in <code>bundle</code> module</h4>
+
+</hgroup><article>
+
+<pre><code class="python">
+def get_deduped_size(dirname):
+    product_dict = {}
+    deduped_size = 0L
+    for root, dirs, files in os.walk(dirname):  
+        if len(dirs) != 0:
+            continue
+        files = filter( lambda filename: os.path.splitext(filename)[1] == '.msi',
+                    files
+                    )
+        if len(files) == 0:
+            continue
+        # Get the first msi as a representative
+        msi = sorted(files)[0]
+        fullpath = os.path.join(root, msi)
+        UpgradeCode, ProductVersion = get_installer_info_from_msi(fullpath)
+
+        size = reduce(lambda size, name: size + os.path.getsize(
+                                            os.path.join(root, name)),
+                      files, 0)
+        if UpgradeCode in product_dict:
+            if product_dict[UpgradeCode]['version'] > ProductVersion:
+                deduped_size += size
+            else:
+                deduped_size += product_dict[UpgradeCode]['size']
+                product_dict[UpgradeCode] = {'version': ProductVersion,
+                                             'size': size}
+        else:
+            product_dict[UpgradeCode] = {'version': ProductVersion,
+                                         'size': size}
+    return deduped_size
+</code></pre>
+</article></section></slide>
+<slide class="slide"><section class="slide-wrapper"><hgroup>
+<h4>Dedupe process in <code>bundle</code> module</h4>
+
+</hgroup><article>
+
+<ul>
+<li>The <code>actual size</code> is the bundle size without dedupe.</li>
+<li>The <code>ideal size</code> equals <code>actual size</code> - <code>deduped_size</code><pre><code class="python">
+def getdirsize(dir):    # actual size 
+  size = 0L  
+  for root, dirs, files in os.walk(dir):  
+      size += sum([os.path.getsize(os.path.join(root, name)) for name in files])  
+  return size
+</code></pre>
+<pre><code class="python">
+ideal_size = getdirsize(bundle_path) - get_deduped_size(bundle_path)
+</code></pre></li>
+</ul>
+
+</article></section></slide>
+<slide class="slide"><section class="slide-wrapper"><hgroup>
 <h4>ORM Class: <code>model.DBUtilities.Model</code></h4>
 
 </hgroup><article>
