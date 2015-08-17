@@ -168,6 +168,7 @@ def welcome():
 
 
 if __name__ == '__main__':
+    os.chdir(os.path.dirname(__file__))
     # Flask needs a secret_key to encrypt session
     app.secret_key = "Academic Software Group"
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')
