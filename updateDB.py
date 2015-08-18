@@ -3,6 +3,7 @@ from utilities import niweb, installer, bundle, remove_path_prefix, testing
 import main_config
 import LogConfig
 import logging
+import os
 def get_stack_date(stack_name):
     return stack_name[10:18]
 
@@ -163,5 +164,10 @@ def update_db(year):
 
 if __name__ == '__main__':
     LogConfig.init_logging()
-    update_db(main_config.CURRENT_YEAR)
 
+    # make sure the db file in the cwd.
+    cwd = os.path.dirname(__file__)
+    if cwd != '':
+        os.chdir(os.path.dirname(__file__))
+
+    update_db(main_config.CURRENT_YEAR)

@@ -2,6 +2,7 @@ from model.DBUtilities import connect_db
 import main_config
 import LogConfig
 import logging
+import os
 
 stack_dashboard_schema = 'model/DBSchmas/stack_dashboard.sql'
 toolkit_installer_dashboard_schema = 'model/DBSchmas/toolkit_installer_dashboard.sql'
@@ -36,4 +37,10 @@ def init_db(year):
 
 if __name__ == '__main__':
     LogConfig.init_logging()
+
+    # make sure the db file in the cwd.
+    cwd = os.path.dirname(__file__)
+    if cwd != '':
+        os.chdir(os.path.dirname(__file__))
+
     init_db(main_config.CURRENT_YEAR)
